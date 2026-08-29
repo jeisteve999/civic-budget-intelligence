@@ -153,23 +153,25 @@ async def run_agent(question_text: str):
 
     final_answer = None
 
-async for event in runner.run_async(
-    user_id=user_id,
-    session_id=session_id,
-    new_message=user_message,
-):
-    if event.content and event.content.parts:
-        for part in event.content.parts:
-            text = getattr(part, "text", None)
-            if text:
-                print(f"\n--- {event.author} ---\n{text}\n")
-
-    if event.author == "analysis_agent":
+    async for event in runner.run_async(
+        user_id=user_id,
+        session_id=session_id,
+        new_message=user_message,
+    ):
         if event.content and event.content.parts:
             for part in event.content.parts:
                 text = getattr(part, "text", None)
                 if text:
-                    final_answer = text
+                    print(f"\n--- {event.author} ---\n{text}\n")
+
+        if event.author == "analysis_agent":
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    text = getattr(part, "text", None)
+                    if text:
+                        final_answer = text
+
+    return final_answer
 
 
 # ---------------------------------------------------------------------
