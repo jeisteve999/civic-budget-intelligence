@@ -1,0 +1,572 @@
+# 🏛️ Civic Budget Intelligence
+
+An evidence-based multi-agent system for researching and verifying public budget information using **OpenGov Africa's OGA Budget Lens** as its primary data source.
+
+The project combines deterministic evidence retrieval, AI agents, verification, provenance tracking, and final evidence-based analysis to answer questions about public budget information without fabricating unsupported claims.
+
+---
+
+## 🎯 Project Objective
+
+The objective of Civic Budget Intelligence is to create a transparent and traceable AI system capable of answering questions about public budgets while maintaining a clear connection between:
+
+**User Question → Evidence → Claim → Verification → Provenance → Final Answer**
+
+The system is designed around three principles:
+
+* **Evidence-first:** answers are grounded in available source evidence.
+* **Verification:** claims are evaluated against the evidence before being presented as verified.
+* **Provenance:** users can trace information back to the original source and page.
+
+---
+
+## 🌍 Primary Data Source
+
+Civic Budget Intelligence uses **OpenGov Africa – OGA Budget Lens** as its primary source of extracted public budget data.
+
+OGA Budget Lens is treated as a **read-only external source** by this project.
+
+🔗 **OGA Budget Lens:**
+https://github.com/OpenGovAfrica/oga-budget-lens
+
+The OGA project is maintained separately from Civic Budget Intelligence.
+
+Civic Budget Intelligence does not modify the OGA repository.
+
+---
+
+# 🤖 Multi-Agent System
+
+The system uses a sequential multi-agent architecture.
+
+Each agent has a specific responsibility in the research pipeline.
+
+```text
+                    USER QUESTION
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ Research Agent  │
+                 └────────┬────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │   Data Agent    │
+                 └────────┬────────┘
+                          │
+                          ▼
+                 ┌─────────────────────┐
+                 │ Verification Agent  │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │  Provenance Agent   │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   Analysis Agent   │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                    FINAL ANSWER
+```
+
+The orchestration is handled by the root sequential agent.
+
+---
+
+# 🧠 Agent Responsibilities
+
+## 1. Research Agent
+
+The Research Agent is responsible for finding relevant evidence inside the available OGA Budget Lens outputs.
+
+It:
+
+* receives the user's question;
+* searches the OGA evidence;
+* selects the strongest relevant result;
+* creates a claim strictly supported by the evidence;
+* preserves the original evidence wording;
+* performs evidence verification;
+* returns the research result and source information.
+
+The agent is explicitly instructed not to invent information or claim that something does not exist in the real world simply because it was not found in the available OGA data.
+
+---
+
+## 2. Data Agent
+
+The Data Agent structures the information returned by the Research Agent.
+
+It extracts fields such as:
+
+```text
+claim
+evidence
+page_number
+source_name
+source_url
+source_file
+verification_status
+```
+
+Its responsibility is data structuring rather than research or interpretation.
+
+---
+
+## 3. Verification Agent
+
+The Verification Agent evaluates whether the claim is actually supported by the supplied evidence.
+
+Possible statuses are:
+
+```text
+VERIFIED
+PARTIALLY_VERIFIED
+CONFLICTING
+UNVERIFIED
+```
+
+The agent does not perform additional research.
+
+Its job is to compare:
+
+```text
+CLAIM
+   │
+   ▼
+EVIDENCE
+   │
+   ▼
+VERIFICATION STATUS
+```
+
+This prevents a related search result from automatically being treated as proof.
+
+---
+
+## 4. Provenance Agent
+
+The Provenance Agent preserves the traceability of the verified information.
+
+For each finding it maintains information such as:
+
+```text
+claim
+evidence
+page_number
+source_name
+source_url
+source_file
+verification_status
+verification_reasoning
+evidence_used
+```
+
+The purpose is to make each answer auditable.
+
+A user should be able to understand where the information came from and what evidence supports it.
+
+---
+
+## 5. Analysis Agent
+
+The Analysis Agent produces the final user-facing response.
+
+It receives the outputs of the previous agents and produces a concise answer based only on the available verified information.
+
+It:
+
+* prioritizes verified findings;
+* identifies partially verified information;
+* identifies conflicting evidence;
+* preserves uncertainty;
+* avoids unsupported conclusions;
+* preserves important source information.
+
+It does not perform new research.
+
+---
+
+# 🔎 Evidence Retrieval
+
+The OGA evidence is accessed through a deterministic search layer.
+
+The search process does not require an LLM to retrieve the underlying evidence.
+
+Conceptually:
+
+```text
+OGA JSON OUTPUTS
+       │
+       ▼
+search_oga()
+       │
+       ▼
+Keyword / phrase matching
+       │
+       ▼
+Match scoring
+       │
+       ▼
+Evidence ranking
+       │
+       ▼
+Best available evidence
+```
+
+The search system evaluates factors including:
+
+* matching terms;
+* match score;
+* exact phrase matches;
+* match strength;
+* page number;
+* source file.
+
+This creates a separation between:
+
+**retrieval of evidence** and **AI reasoning over evidence**.
+
+---
+
+# 🛡️ Evidence Integrity
+
+One of the main design principles is preserving the original evidence.
+
+The system instructs the agents not to:
+
+* fabricate evidence;
+* modify evidence wording;
+* invent numbers;
+* invent sources;
+* invent page numbers;
+* invent URLs;
+* combine unrelated evidence;
+* present unsupported information as verified.
+
+For example, if the source contains:
+
+```text
+Matching row: tolerant crops to promote food security
+```
+
+the system should preserve that evidence rather than transforming it into an unsupported statement such as:
+
+```text
+Kenya invested $X million in food security.
+```
+
+unless that information is explicitly supported by the source.
+
+---
+
+# 🔗 Provenance Model
+
+The conceptual provenance chain is:
+
+```text
+USER QUESTION
+      │
+      ▼
+SEARCH QUERY
+      │
+      ▼
+OGA SOURCE FILE
+      │
+      ▼
+PAGE NUMBER
+      │
+      ▼
+EXTRACTED EVIDENCE
+      │
+      ▼
+CLAIM
+      │
+      ▼
+VERIFICATION
+      │
+      ▼
+FINAL ANSWER
+```
+
+This allows the system to maintain a relationship between the final answer and the original evidence.
+
+---
+
+# 🏗️ Architecture
+
+```text
+civic-budget-intelligence/
+│
+├── app/
+│   │
+│   ├── agents/
+│   │   ├── analysis_agent.py
+│   │   ├── data_agent.py
+│   │   ├── provenance_agent.py
+│   │   ├── research_agent.py
+│   │   ├── root_agent.py
+│   │   └── verification_agent.py
+│   │
+│   ├── models/
+│   │
+│   ├── provenance/
+│   │   └── evidence.py
+│   │
+│   ├── sources/
+│   │   └── oga_source.py
+│   │
+│   ├── tools/
+│   │
+│   ├── verifier.py
+│   ├── main.py
+│   └── web_app.py
+│
+├── .gitignore
+└── README.md
+```
+
+---
+
+# 🔄 End-to-End Logic
+
+A typical request follows this sequence:
+
+### Step 1 — User asks a question
+
+Example:
+
+```text
+What evidence exists regarding food security in Kenya's 2023/24 budget?
+```
+
+### Step 2 — Research Agent searches OGA
+
+The system searches the available OGA Budget Lens JSON outputs.
+
+### Step 3 — Evidence is selected
+
+The strongest relevant evidence is selected according to deterministic matching and ranking.
+
+### Step 4 — Claim is created
+
+The Research Agent creates a claim that must remain within the boundaries of the selected evidence.
+
+### Step 5 — Evidence is verified
+
+The verification process evaluates whether the evidence supports the claim.
+
+### Step 6 — Data is structured
+
+The Data Agent organizes the finding and provenance fields.
+
+### Step 7 — Verification Agent evaluates the finding
+
+The claim receives a verification status.
+
+### Step 8 — Provenance is preserved
+
+The source, page, file and evidence remain connected to the finding.
+
+### Step 9 — Analysis Agent responds
+
+The final answer is generated using the verified information available in the pipeline.
+
+---
+
+# 🧪 Example
+
+A question such as:
+
+```text
+What evidence exists regarding food security in Kenya's 2023/24 budget?
+```
+
+can retrieve evidence such as:
+
+```text
+Previous row: iv) Invested in biotechnology research and uptake of drought
+Matching row: tolerant crops to promote food security, particularly in
+Next row: marginalized areas. In the current year, over 250 metric
+```
+
+The evidence is associated with:
+
+```text
+Source:
+OpenGov Africa - OGA Budget Lens
+
+Source file:
+kenya_budget_2023_24.json
+
+Page:
+8
+```
+
+The system can then evaluate whether the resulting claim is supported by that evidence.
+
+---
+
+# 💻 Try the Demo
+
+A live interactive demo can be added here once the application is deployed.
+
+**🚀 Try Civic Budget Intelligence**
+
+👉 **[Open the Interactive Demo](YOUR_STREAMLIT_APP_URL_HERE)**
+
+Replace:
+
+```text
+YOUR_STREAMLIT_APP_URL_HERE
+```
+
+with the public URL generated by your Streamlit deployment.
+
+For example:
+
+```markdown
+[🚀 Try the Civic Budget Intelligence Demo](https://your-app.streamlit.app)
+```
+
+---
+
+# 🚀 Running Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/jeisteve999/civic-budget-intelligence.git
+```
+
+Enter the project:
+
+```bash
+cd civic-budget-intelligence
+```
+
+Create and activate the virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configure the Gemini API key in your environment.
+
+Then launch the Streamlit application:
+
+```bash
+python -m streamlit run app/web_app.py
+```
+
+The application will normally be available at:
+
+```text
+http://localhost:8501
+```
+---
+
+# 📊 Design Philosophy
+
+Civic Budget Intelligence intentionally separates responsibilities between agents.
+
+```text
+Research
+   ↓
+Structure
+   ↓
+Verify
+   ↓
+Preserve Provenance
+   ↓
+Analyze
+```
+
+This makes the system easier to inspect, test and improve than a single agent responsible for the entire process.
+
+The project also favors a controlled architecture with limited model calls and deterministic evidence retrieval where possible.
+
+---
+
+# 🌍 Why This Matters
+
+Public budget information can be difficult to navigate, especially when information is distributed across large government documents and extracted datasets.
+
+Civic Budget Intelligence explores how multi-agent AI systems can help citizens, researchers and civic organizations interact with public financial information while maintaining a stronger connection between:
+
+**Question → Evidence → Verification → Source**
+
+The goal is not simply to generate an answer.
+
+The goal is to generate an answer that can be **traced back to evidence**.
+
+---
+
+# 🔗 Related Project
+
+### OpenGov Africa — OGA Budget Lens
+
+OGA Budget Lens is the primary external data source used by this project.
+
+🔗 https://github.com/OpenGovAfrica/oga-budget-lens
+
+Please refer to the OGA repository for information about its own extraction pipeline, data processing and project architecture.
+
+---
+
+# 🛠️ Technology
+
+Main technologies used in the project include:
+
+* Python
+* Google ADK
+* Gemini
+* Streamlit
+* JSON
+* Git / GitHub
+* OpenGov Africa — OGA Budget Lens
+
+---
+
+# 📌 Project Status
+
+**Current status:** Working prototype / experimental civic AI system.
+
+The system demonstrates a complete multi-agent workflow for:
+
+```text
+Research
+→ Data Structuring
+→ Verification
+→ Provenance
+→ Analysis
+→ User Response
+```
+
+Future improvements may include additional public budget sources, expanded evidence coverage, stronger automated evaluation and improved visualization of provenance.
+
+---
+
+# 👤 Author
+
+Developed as an independent civic technology / AI agent project exploring evidence-based public budget intelligence.
+
+GitHub:
+
+https://github.com/jeisteve999/civic-budget-intelligence
