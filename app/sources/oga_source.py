@@ -5,7 +5,7 @@ from app.provenance.evidence import create_evidence
 
 
 OGA_OUTPUT_DIR = (
-    Path(__file__).resolve().parents[2]
+    Path(__file__).resolve().parents[1]
     / "data"
     / "oga_output"
 )
