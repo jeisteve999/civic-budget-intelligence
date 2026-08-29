@@ -1,0 +1,197 @@
+#MainMenu, footer, header {visibility: hidden;}
+
+.stApp {
+    background-color: #eef2f1;
+}
+
+.block-container {
+    max-width: 800px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* ---- Header / Logo ---- */
+.oga-logo-row {
+    text-align: center;
+    margin-bottom: 0.2rem;
+}
+.oga-logo-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #14213d;
+}
+.oga-logo-title .accent {
+    color: #16a34a;
+}
+.oga-logo-tagline {
+    font-size: 0.75rem;
+    color: #6b7280;
+    letter-spacing: 0.03em;
+    margin-bottom: 1rem;
+}
+
+h1.oga-app-title {
+    color: #14213d;
+    font-weight: 800;
+    text-align: center;
+    font-size: 1.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.oga-app-subtitle {
+    text-align: center;
+    color: #475569;
+    margin-bottom: 0.8rem;
+}
+
+.oga-badge-wrap {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.oga-badge {
+    display: inline-block;
+    background-color: #e6f4ea;
+    color: #15803d;
+    border: 1px solid #b7e0c2;
+    border-radius: 999px;
+    padding: 5px 16px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+/* ---- Cards ---- */
+.oga-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 1.6rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.oga-card h3 {
+    color: #14213d;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+}
+
+/* ---- Answer header row with status badge ---- */
+.oga-answer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.9rem;
+}
+
+.oga-status-verified {
+    background-color: #dcfce7;
+    color: #15803d;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+}
+.oga-status-partial {
+    background-color: #fef9c3;
+    color: #a16207;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-weight: 700;
+    font-size: 0.78rem;
+}
+.oga-status-conflicting, .oga-status-unverified {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-weight: 700;
+    font-size: 0.78rem;
+}
+
+.oga-answer-text {
+    background-color: #f8fafc;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+/* ---- Evidence box ---- */
+.oga-evidence-box {
+    background-color: #f0fdf4;
+    border: 1px solid #dcfce7;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    line-height: 1.6;
+    color: #1e293b;
+}
+.oga-evidence-box b {
+    color: #15803d;
+}
+
+/* ---- Source grid ---- */
+.oga-source-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+.oga-source-item .label {
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.oga-source-item .value {
+    color: #1e293b;
+    font-size: 0.92rem;
+}
+
+/* ---- Search input styling ---- */
+.stTextInput > div > div > input,
+.stTextArea textarea {
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+}
+
+/* ---- Buttons ---- */
+.stButton > button {
+    background-color: #15803d;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 0.5rem 1.4rem;
+    font-weight: 600;
+}
+.stButton > button:hover {
+    background-color: #166534;
+    color: white;
+}
+
+/* Footer note */
+.oga-footer-note {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.82rem;
+    margin-top: 1.5rem;
+    line-height: 1.5;
+}
+
+.oga-logo-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 14px !important;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 1.2rem;
+}
