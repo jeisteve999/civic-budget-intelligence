@@ -5,12 +5,10 @@ from app.provenance.evidence import create_evidence
 
 
 OGA_OUTPUT_DIR = (
-    Path(__file__).resolve().parents[3]
-    / "oga-budget-lens"
+    Path(__file__).resolve().parents[2]
     / "data"
-    / "output"
+    / "oga_output"
 )
-
 
 def load_oga_output(file_name: str) -> dict:
     """
