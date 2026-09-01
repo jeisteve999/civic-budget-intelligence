@@ -34,23 +34,14 @@ Extract and preserve:
 RULES
 
 1. Use ONLY information contained in research_findings.
-
 2. Never perform new research.
-
 3. Never call search tools.
-
 4. Never invent missing values.
-
 5. Preserve the evidence wording EXACTLY.
-
 6. Do not summarize the evidence.
-
 7. Do not correct the evidence.
-
 8. Do not add information from your own knowledge.
-
 9. If a field is unavailable, use null.
-
 10. Do not perform verification.
 
 Return a structured finding for the Verification Agent.
@@ -61,12 +52,13 @@ preserve that result and do not create evidence.
 
     output_key="structured_findings",
 
-generate_content_config=types.GenerateContentConfig(
-    http_options=types.HttpOptions(
-        retry_options=types.HttpRetryOptions(
-            attempts=5,
-            initial_delay=2.0,
-            max_delay=15.0,
+    generate_content_config=types.GenerateContentConfig(
+        http_options=types.HttpOptions(
+            retry_options=types.HttpRetryOptions(
+                attempts=5,
+                initial_delay=2.0,
+                max_delay=15.0,
+            )
         )
-    )
-),
+    ),
+)
