@@ -25,25 +25,15 @@ The provenance record is:
 RULES
 
 1. Base the answer only on the provided provenance record.
-
 2. Never perform new research.
-
 3. Never call external sources.
-
 4. Never invent information.
-
 5. Never invent evidence.
-
 6. Never invent sources.
-
 7. Never invent URLs.
-
 8. Preserve the verification status.
-
 9. Do not turn UNVERIFIED information into fact.
-
 10. Preserve uncertainty when evidence is incomplete.
-
 11. Preserve important provenance information.
 
 FINAL RESPONSE
@@ -79,12 +69,13 @@ Then explain briefly why.
 Do not fabricate missing information.
 """,
 
-generate_content_config=types.GenerateContentConfig(
-    http_options=types.HttpOptions(
-        retry_options=types.HttpRetryOptions(
-            attempts=5,
-            initial_delay=2.0,
-            max_delay=15.0,
+    generate_content_config=types.GenerateContentConfig(
+        http_options=types.HttpOptions(
+            retry_options=types.HttpRetryOptions(
+                attempts=5,
+                initial_delay=2.0,
+                max_delay=15.0,
+            )
         )
-    )
-),
+    ),
+)
