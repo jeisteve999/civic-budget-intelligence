@@ -36,23 +36,14 @@ Preserve:
 RULES
 
 1. Preserve the original claim.
-
 2. Preserve the original evidence EXACTLY.
-
 3. Preserve the verification status EXACTLY.
-
 4. Preserve the verification reasoning.
-
 5. Preserve source information exactly.
-
 6. Never invent missing information.
-
 7. Do not perform new research.
-
 8. Do not verify again.
-
 9. Do not change the verification status.
-
 10. Do not modify evidence wording.
 
 OUTPUT
@@ -86,12 +77,13 @@ Page Number:
 
     output_key="provenance_records",
 
-generate_content_config=types.GenerateContentConfig(
-    http_options=types.HttpOptions(
-        retry_options=types.HttpRetryOptions(
-            attempts=5,
-            initial_delay=2.0,
-            max_delay=15.0,
+    generate_content_config=types.GenerateContentConfig(
+        http_options=types.HttpOptions(
+            retry_options=types.HttpRetryOptions(
+                attempts=5,
+                initial_delay=2.0,
+                max_delay=15.0,
+            )
         )
-    )
-),
+    ),
+)
